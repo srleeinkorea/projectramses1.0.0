@@ -46,8 +46,8 @@ const BrandLogo: React.FC<{ department: Department }> = ({ department }) => {
      return (
       <div className="flex items-center gap-3 select-none">
         <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-teal-400 shadow-lg shadow-indigo-500/20 text-white shrink-0">
-            {/* Gastric/Stomach Icon */}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+            {/* Gastric/Stomach Icon (J-shape bag concept) */}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
                <path d="M6 5a2 2 0 0 1 2-2h1.5a2 2 0 0 1 2 1l1 2a2 2 0 0 0 2 1h1a2 2 0 0 1 2 2v2a2 2 0 0 1-1 1.73V19a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V13a2 2 0 0 1 2-2h1" />
                <path d="M8 12h3" opacity="0.5"/>
             </svg>
@@ -69,8 +69,8 @@ const BrandLogo: React.FC<{ department: Department }> = ({ department }) => {
      return (
       <div className="flex items-center gap-3 select-none">
         <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-fuchsia-400 shadow-lg shadow-purple-500/20 text-white shrink-0">
-            {/* Colon/Intestine Icon */}
-             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+            {/* Colon/Intestine Icon (Loop concept) */}
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
                 <path d="M8 4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4Z" opacity="0.4"/>
                 <path d="M12 4v16" />
                 <path d="M4 12h16" />
