@@ -15,26 +15,26 @@ const BellIcon: React.FC<{ className?: string }> = (props) => (
 );
 
 const CheckCircleIcon: React.FC<{ className?: string }> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}>
-    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} {...props}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 );
 
 const ExclamationTriangleIcon: React.FC<{ className?: string }> = (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}>
-      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
     </svg>
 );
 
 const ExclamationCircleIcon: React.FC<{ className?: string }> = (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}>
-      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
     </svg>
 );
 
 const XMarkIcon: React.FC<{ className?: string }> = (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}>
-      <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
     </svg>
 );
 
@@ -81,9 +81,9 @@ const AlertCenter: React.FC<AlertCenterProps> = ({ alerts, onMarkAsRead, onClear
 
   const getSeverityIcon = (severity: AlertSeverity) => {
       switch (severity) {
-          case 'critical': return <ExclamationCircleIcon className="h-6 w-6 text-red-500" />;
-          case 'warning': return <ExclamationTriangleIcon className="h-6 w-6 text-yellow-500" />;
-          default: return <div className="h-6 w-6 rounded-full bg-blue-400 flex items-center justify-center text-white text-sm font-bold">i</div>;
+          case 'critical': return <ExclamationCircleIcon className="h-5 w-5 text-red-500" />;
+          case 'warning': return <ExclamationTriangleIcon className="h-5 w-5 text-yellow-500" />;
+          default: return <div className="h-5 w-5 rounded-full bg-blue-400 flex items-center justify-center text-white text-xs font-bold">i</div>;
       }
   };
 
@@ -98,12 +98,12 @@ const AlertCenter: React.FC<AlertCenterProps> = ({ alerts, onMarkAsRead, onClear
         <div className="relative" ref={dropdownRef}>
         <button
             onClick={() => setIsOpen(!isOpen)}
-            className="p-2.5 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded-full transition-colors"
+            className="p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded-full transition-colors"
             aria-label="알림"
         >
-            <BellIcon className="h-7 w-7" />
+            <BellIcon className="h-6 w-6" />
             {unreadCount > 0 && (
-            <span className="absolute top-1 right-1 block h-5 w-5 rounded-full bg-red-500 ring-2 ring-white text-xs font-bold text-white flex items-center justify-center">
+            <span className="absolute top-1 right-1 block h-4 w-4 rounded-full bg-red-500 ring-2 ring-white text-[10px] font-bold text-white flex items-center justify-center">
                 {unreadCount > 9 ? '9+' : unreadCount}
             </span>
             )}
@@ -112,45 +112,45 @@ const AlertCenter: React.FC<AlertCenterProps> = ({ alerts, onMarkAsRead, onClear
         {/* Dropdown Panel */}
         {isOpen && (
             <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 z-50 overflow-hidden transform transition-all">
-            <div className="p-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-gray-700">알림 센터</h3>
+            <div className="p-3 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+                <h3 className="text-base font-semibold text-gray-700">알림 센터</h3>
                 {alerts.length > 0 && (
-                     <button onClick={onClearAll} className="text-sm text-gray-500 hover:text-gray-700 underline">
+                     <button onClick={onClearAll} className="text-xs text-gray-500 hover:text-gray-700 underline">
                         모두 지우기
                     </button>
                 )}
             </div>
-            <div className="max-h-96 overflow-y-auto">
+            <div className="max-h-80 overflow-y-auto">
                 {alerts.length === 0 ? (
-                <div className="p-8 text-center text-gray-500 text-base">
+                <div className="p-6 text-center text-gray-500 text-sm">
                     새로운 알림이 없습니다.
                 </div>
                 ) : (
                 <ul className="divide-y divide-gray-100">
                     {alerts.map((alert) => (
-                    <li key={alert.id} className={`p-4 hover:bg-gray-50 transition-colors relative ${!alert.isRead ? 'bg-blue-50/30' : ''}`}>
+                    <li key={alert.id} className={`p-3 hover:bg-gray-50 transition-colors relative ${!alert.isRead ? 'bg-blue-50/30' : ''}`}>
                         <div className="flex items-start space-x-3">
                             <div className="flex-shrink-0 mt-0.5">
                                 {getSeverityIcon(alert.severity)}
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-base font-medium text-gray-900 truncate pr-6">
+                                <p className="text-sm font-medium text-gray-900 truncate pr-6">
                                     {alert.message}
                                 </p>
-                                <p className="text-sm text-gray-500 mt-1">
+                                <p className="text-xs text-gray-500 mt-0.5">
                                     {alert.patientName} • {alert.agentName}
                                 </p>
-                                <p className="text-xs text-gray-400 mt-1">
+                                <p className="text-[10px] text-gray-400 mt-0.5">
                                     {formatTime(alert.timestamp)}
                                 </p>
                             </div>
                             {!alert.isRead && (
                                 <button 
                                     onClick={(e) => { e.stopPropagation(); onMarkAsRead(alert.id); }}
-                                    className="absolute top-4 right-4 text-gray-400 hover:text-blue-500"
+                                    className="absolute top-3 right-3 text-gray-400 hover:text-blue-500"
                                     title="읽음으로 표시"
                                 >
-                                    <CheckCircleIcon className="h-6 w-6" />
+                                    <CheckCircleIcon className="h-5 w-5" />
                                 </button>
                             )}
                         </div>
@@ -166,19 +166,19 @@ const AlertCenter: React.FC<AlertCenterProps> = ({ alerts, onMarkAsRead, onClear
         {/* Toast Notification for Critical Alerts */}
         {toastAlert && (
             <div className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-[60] max-w-sm w-full shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden animate-slide-down ${getSeverityStyles(toastAlert.severity)}`}>
-                <div className="p-5">
+                <div className="p-4">
                     <div className="flex items-start">
                         <div className="flex-shrink-0">
                             {getSeverityIcon(toastAlert.severity)}
                         </div>
-                        <div className="ml-4 w-0 flex-1 pt-0.5">
-                            <p className="text-base font-medium">
+                        <div className="ml-3 w-0 flex-1 pt-0.5">
+                            <p className="text-sm font-medium">
                                 {toastAlert.severity === 'critical' ? '긴급 알림' : '알림'}
                             </p>
-                            <p className="mt-1 text-sm opacity-90">
+                            <p className="mt-1 text-xs opacity-90">
                                 {toastAlert.message}
                             </p>
-                            <p className="mt-1 text-xs opacity-75">
+                            <p className="mt-1 text-[10px] opacity-75">
                                 {toastAlert.patientName}
                             </p>
                         </div>
@@ -188,7 +188,7 @@ const AlertCenter: React.FC<AlertCenterProps> = ({ alerts, onMarkAsRead, onClear
                                 onClick={() => setToastAlert(null)}
                             >
                                 <span className="sr-only">Close</span>
-                                <XMarkIcon className="h-6 w-6" />
+                                <XMarkIcon className="h-4 w-4" />
                             </button>
                         </div>
                     </div>

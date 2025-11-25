@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 interface ToggleSwitchProps {
@@ -10,8 +11,8 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, setEnabled }) => {
     <button
       type="button"
       className={`${
-        enabled ? 'bg-blue-600' : 'bg-gray-200'
-      } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
+        enabled ? 'bg-green-500' : 'bg-slate-200'
+      } relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 shadow-inner`}
       role="switch"
       aria-checked={enabled}
       onClick={() => setEnabled(!enabled)}
@@ -21,7 +22,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, setEnabled }) => {
         aria-hidden="true"
         className={`${
           enabled ? 'translate-x-5' : 'translate-x-0'
-        } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
+        } pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out`}
       />
     </button>
   );

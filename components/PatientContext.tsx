@@ -21,19 +21,19 @@ const FemaleIcon: React.FC<{ className?: string }> = (props) => (
 );
 
 const ExclamationTriangleIcon: React.FC<{ className?: string }> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}>
-    <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} {...props}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
   </svg>
 );
 
 const ArrowPathIcon: React.FC<{ className?: string }> = (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}>
-        <path fillRule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.433a.75.75 0 000-1.5H3.989a.75.75 0 00-.75.75v4.242a.75.75 0 001.5 0v-2.43l.31.31a7 7 0 0011.712-3.138.75.75 0 00-1.449-.39zm1.23-3.723a.75.75 0 00.219-.53V2.929a.75.75 0 00-1.5 0v2.433l-.31-.31a7 7 0 00-11.712 3.138.75.75 0 001.449.39 5.5 5.5 0 019.201-2.466l.312.312H11.75a.75.75 0 000 1.5h4.243a.75.75 0 00.548-.219z" clipRule="evenodd" />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
     </svg>
 );
 
 const PatientContext: React.FC<PatientContextProps> = ({ department, patient }) => {
-  if (!patient) return <div className="p-6 text-base text-gray-500">환자를 선택해주세요.</div>;
+  if (!patient) return <div className="p-4 text-sm text-gray-500">환자를 선택해주세요.</div>;
 
   const isMale = patient.gender === '남';
   const isSurgery = department === 'SURGERY';
@@ -63,33 +63,33 @@ const PatientContext: React.FC<PatientContextProps> = ({ department, patient }) 
     }
 
     return (
-        <div className={`flex items-center px-4 py-2 rounded-full border border-opacity-10 ${badgeClass} border-current ml-6`}>
+        <div className={`flex items-center px-3 py-1.5 rounded-full border border-opacity-10 ${badgeClass} border-current ml-6`}>
             {icon}
-            <span className="ml-2 text-xs font-bold mr-3">{title}</span>
-            <span className="text-xl font-extrabold">{score}</span>
-            <span className="mx-2 opacity-50 text-sm">|</span>
-            <span className="text-sm font-semibold">{label}</span>
+            <span className="ml-2 text-xs font-bold mr-2">{title}</span>
+            <span className="text-lg font-extrabold">{score}</span>
+            <span className="mx-2 opacity-50 text-xs">|</span>
+            <span className="text-xs font-semibold">{label}</span>
         </div>
     );
   };
 
   return (
-    <div className="flex items-center justify-between px-6 py-4 w-full bg-white">
+    <div className="flex items-center justify-between px-6 py-3 w-full bg-white">
       <div className="flex items-center min-w-0">
-         <div className={`flex items-center justify-center h-12 w-12 rounded-full flex-shrink-0 bg-gray-100 text-gray-400 mr-4`}>
-             {isMale ? <MaleIcon className="h-7 w-7 text-blue-500" /> : <FemaleIcon className="h-7 w-7 text-pink-500" />}
+         <div className={`flex items-center justify-center h-10 w-10 rounded-full flex-shrink-0 bg-gray-100 text-gray-400 mr-3`}>
+             {isMale ? <MaleIcon className="h-6 w-6 text-blue-500" /> : <FemaleIcon className="h-6 w-6 text-pink-500" />}
          </div>
          <div className="flex flex-col">
-            <div className="flex items-center gap-3">
-                <h2 className="text-2xl font-bold text-gray-900 leading-none">{patient.name}</h2>
-                <span className="text-sm text-gray-500 font-medium">({patient.gender}/{patient.age}세)</span>
-                {isSurgery && <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-xs font-bold rounded border border-indigo-100">G-PEP</span>}
-                {isColorectal && <span className="px-2 py-0.5 bg-purple-50 text-purple-700 text-xs font-bold rounded border border-purple-100">C-PEP</span>}
+            <div className="flex items-center gap-2">
+                <h2 className="text-xl font-bold text-gray-900 leading-none">{patient.name}</h2>
+                <span className="text-xs text-gray-500 font-medium">({patient.gender}/{patient.age}세)</span>
+                {isSurgery && <span className="px-1.5 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded border border-indigo-100">G-PEP</span>}
+                {isColorectal && <span className="px-1.5 py-0.5 bg-purple-50 text-purple-700 text-[10px] font-bold rounded border border-purple-100">C-PEP</span>}
             </div>
-            <div className="flex items-center gap-2 mt-1.5">
-                <span className="text-sm font-semibold text-gray-700 truncate max-w-[240px]" title={patient.diagnosis}>{patient.diagnosis}</span>
-                <span className="text-xs text-gray-300">|</span>
-                <span className="text-sm text-gray-500 truncate max-w-[350px]" title={patient.status}>{patient.status}</span>
+            <div className="flex items-center gap-2 mt-1">
+                <span className="text-xs font-semibold text-gray-700 truncate max-w-[240px]" title={patient.diagnosis}>{patient.diagnosis}</span>
+                <span className="text-[10px] text-gray-300">|</span>
+                <span className="text-xs text-gray-500 truncate max-w-[350px]" title={patient.status}>{patient.status}</span>
             </div>
          </div>
       </div>

@@ -336,8 +336,8 @@ export const INITIAL_AGENTS_PEDIATRICS: Agent<any>[] = [
   },
   {
     id: 'agent-4',
-    name: '경과 요약 보고서',
-    description: '의료진을 위해 민준이의 PARDS 경과를 요약하여 매일 아침 보고서를 생성합니다.',
+    name: 'PRO(환자 보고 결과) 리포트',
+    description: '환자 앱을 통해 수집된 PRO(환자 보고 결과) 및 증상 데이터를 분석하여, 의료진이 환자의 주관적 상태 변화를 정량적으로 파악할 수 있도록 표준화된 임상 리포트를 생성합니다.',
     category: AgentCategory.REPORTING,
     type: AgentType.REPORTING_SUMMARY,
     icon: DocumentTextIcon,
@@ -377,7 +377,12 @@ export const INITIAL_AGENTS_PEP: Agent<any>[] = [
         spo2Threshold: 94, // Slightly higher threshold for recovery
         alertSensitivity: 'high',
         emrIntegration: { ...DEFAULT_EMR_INTEGRATION_CONFIG, enabled: true, dataPoints: { vitals: true } },
-        notificationPreferences: { ...DEFAULT_NOTIFICATION_PREFERENCES, push: true, sound: true },
+        notificationPreferences: {
+          enabled: true,
+          sound: true,
+          push: true,
+          email: true,
+        },
       } as MonitoringConfig,
       enabled: true,
     },
@@ -478,7 +483,7 @@ export const INITIAL_AGENTS_COLORECTAL: Agent<any>[] = [
       spo2Threshold: 92,
       alertSensitivity: 'medium',
       emrIntegration: { ...DEFAULT_EMR_INTEGRATION_CONFIG, enabled: true, dataPoints: { vitals: true } },
-      notificationPreferences: { ...DEFAULT_NOTIFICATION_PREFERENCES, push: true },
+      notificationPreferences: DEFAULT_NOTIFICATION_PREFERENCES,
     } as MonitoringConfig,
     enabled: true,
   },

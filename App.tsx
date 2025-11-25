@@ -266,6 +266,15 @@ const App: React.FC = () => {
 
   return (
     <>
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+      `}</style>
       <div className="flex h-screen bg-slate-50 font-sans text-slate-900">
         {/* Left Sidebar: Patient List */}
         <Sidebar
@@ -280,13 +289,13 @@ const App: React.FC = () => {
         <main className="flex-1 flex flex-col overflow-hidden relative">
           
           {/* Top Header */}
-          <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4 flex justify-between items-center h-16">
+          <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4 flex justify-between items-center h-16 shrink-0">
                 <div className="flex items-center gap-4">
-                    <h1 className="text-2xl font-bold text-slate-800 tracking-tight">
+                    <h1 className="text-xl font-bold text-slate-800 tracking-tight">
                     {getHeaderTitle()}
                     </h1>
-                    <div className="h-5 w-px bg-gray-300"></div>
-                    <p className="text-sm font-medium text-slate-500 uppercase tracking-wide">Medical AI Control Center</p>
+                    <div className="h-4 w-px bg-gray-300"></div>
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Medical AI Control Center</p>
                 </div>
                 <div className="flex items-center space-x-4">
                     <AlertCenter 
@@ -298,7 +307,7 @@ const App: React.FC = () => {
           </header>
 
           {/* Active Patient Details Context */}
-          <div className="bg-white border-b border-gray-200 shadow-sm z-10">
+          <div className="bg-white border-b border-gray-200 shadow-sm z-10 shrink-0">
              <PatientContext 
                 department={department} 
                 patient={currentPatient}
@@ -306,31 +315,37 @@ const App: React.FC = () => {
           </div>
 
           {/* Agent Navigation Tabs */}
-          <div className="bg-gray-50 border-b border-gray-200 px-6 pt-4">
-            <div className="flex items-center space-x-1 overflow-x-auto scrollbar-hide">
+          <div className="bg-gray-50 border-b border-gray-200 pt-3 shrink-0">
+            <div className="flex items-center space-x-1 overflow-x-auto scrollbar-hide px-6">
                  {/* Agent Tabs */}
                  {agents.map(agent => (
                      <button
                         key={agent.id}
                         onClick={() => setSelectedAgentId(agent.id)}
                         className={`
-                            flex items-center px-5 py-3 text-base font-medium border-t border-l border-r rounded-t-lg whitespace-nowrap transition-all
+                            flex items-center px-4 py-2.5 text-sm font-medium border-t border-l border-r rounded-t-lg whitespace-nowrap transition-all
                             ${selectedAgentId === agent.id 
                                 ? 'border-gray-200 bg-white text-blue-600 shadow-[0_-2px_4px_rgba(0,0,0,0.02)] translate-y-[1px]' 
                                 : 'border-transparent bg-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-100'
                             }
                         `}
                      >
-                        <agent.icon className={`h-5 w-5 mr-2.5 ${selectedAgentId === agent.id ? 'text-blue-500' : 'text-gray-400'}`} />
+                        <agent.icon className={`h-4 w-4 mr-2 ${selectedAgentId === agent.id ? 'text-blue-500' : 'text-gray-400'}`} />
                         {agent.name}
-                        <span className={`ml-2.5 w-2.5 h-2.5 rounded-full ${agent.enabled ? 'bg-green-500' : 'bg-gray-300'}`}></span>
+                        <span className="ml-2.5 flex items-center">
+                            <span className={`block h-2 w-2 rounded-full ring-2 ring-white transition-all ${
+                                agent.enabled 
+                                ? 'bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.6)]' 
+                                : 'bg-gray-300'
+                            }`}></span>
+                        </span>
                      </button>
                  ))}
 
                  {/* New Agent Button */}
                  <button
                     onClick={() => setIsCreateModalOpen(true)}
-                    className="ml-2 p-2 rounded text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                    className="ml-1 p-1.5 rounded text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
                     title="새 에이전트 추가"
                  >
                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -344,14 +359,14 @@ const App: React.FC = () => {
                  <button
                     onClick={() => setSelectedAgentId('knowledge-base')}
                     className={`
-                        flex items-center px-5 py-3 text-base font-medium border-t border-l border-r rounded-t-lg whitespace-nowrap transition-all ml-4
+                        flex items-center px-4 py-2.5 text-sm font-medium border-t border-l border-r rounded-t-lg whitespace-nowrap transition-all ml-4
                         ${selectedAgentId === 'knowledge-base' 
                              ? 'border-gray-200 bg-white text-indigo-600 shadow-[0_-2px_4px_rgba(0,0,0,0.02)] translate-y-[1px]' 
                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-100'
                         }
                     `}
                  >
-                    <BookOpenIcon className={`h-5 w-5 mr-2.5 ${selectedAgentId === 'knowledge-base' ? 'text-indigo-500' : 'text-gray-400'}`} />
+                    <BookOpenIcon className={`h-4 w-4 mr-2 ${selectedAgentId === 'knowledge-base' ? 'text-indigo-500' : 'text-gray-400'}`} />
                     Knowledge DB
                  </button>
             </div>
@@ -362,7 +377,7 @@ const App: React.FC = () => {
             ref={scrollContainerRef}
             className="flex-1 p-6 overflow-y-auto bg-slate-50"
           >
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-6xl mx-auto">
                 {selectedAgentId === 'knowledge-base' ? (
                     <KnowledgeBasePanel 
                         knowledgeSources={knowledgeSources}
@@ -380,7 +395,7 @@ const App: React.FC = () => {
                     />
                 ) : (
                 <div className="flex items-center justify-center h-full">
-                    <p className="text-gray-500 text-lg">에이전트를 선택해주세요.</p>
+                    <p className="text-gray-500 text-sm">에이전트를 선택해주세요.</p>
                 </div>
                 )}
             </div>
