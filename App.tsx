@@ -109,6 +109,9 @@ const App: React.FC = () => {
   const availablePatients = useMemo(() => MOCK_PATIENTS.filter(p => p.department === department), [department]);
   const [currentPatient, setCurrentPatient] = useState<Patient>(availablePatients[0]);
 
+  // Drag and drop state
+  const [draggedAgentIndex, setDraggedAgentIndex] = useState<number | null>(null);
+
   // Ref for scrollable container
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const tabsContainerRef = useRef<HTMLDivElement>(null);
@@ -363,6 +366,32 @@ const App: React.FC = () => {
     setKnowledgeSources(newSources);
   }, [setKnowledgeSources]);
 
+  // Drag and Drop Handlers
+  const handleDragStart = (e: React.DragEvent<HTMLButtonElement>, index: number) => {
+    setDraggedAgentIndex(index);
+    // Set a dummy transparent image or rely on default browser behavior
+    // For simpler UX, we won't customize drag image heavily here
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLButtonElement>) => {
+    e.preventDefault(); // Necessary to allow dropping
+    e.dataTransfer.dropEffect = "move";
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLButtonElement>, targetIndex: number) => {
+    e.preventDefault();
+    if (draggedAgentIndex === null) return;
+    if (draggedAgentIndex === targetIndex) return;
+
+    const newAgents = [...agents];
+    const [movedAgent] = newAgents.splice(draggedAgentIndex, 1);
+    newAgents.splice(targetIndex, 0, movedAgent);
+
+    setAgents(newAgents);
+    setDraggedAgentIndex(null);
+  };
+
 
   const selectedAgent = agents.find(agent => agent.id === selectedAgentId);
 
@@ -456,9 +485,13 @@ const App: React.FC = () => {
                 className="flex items-center space-x-1 overflow-x-auto scrollbar-hide px-2 sm:px-6 relative"
             >
                  {/* Agent Tabs */}
-                 {agents.map(agent => (
+                 {agents.map((agent, index) => (
                      <button
                         key={agent.id}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, index)}
+                        onDragOver={handleDragOver}
+                        onDrop={(e) => handleDrop(e, index)}
                         onClick={() => setSelectedAgentId(agent.id)}
                         className={`
                             flex items-center px-3 sm:px-4 py-2.5 text-sm font-medium border-t border-l border-r rounded-t-lg whitespace-nowrap transition-all select-none
@@ -466,6 +499,8 @@ const App: React.FC = () => {
                                 ? 'border-gray-200 bg-white text-blue-600 shadow-[0_-2px_4px_rgba(0,0,0,0.02)] translate-y-[1px] z-10' 
                                 : 'border-transparent bg-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-100'
                             }
+                            ${draggedAgentIndex === index ? 'opacity-50 border-dashed border-gray-300' : 'opacity-100'}
+                            cursor-grab active:cursor-grabbing
                         `}
                      >
                         <agent.icon className={`h-4 w-4 mr-2 ${selectedAgentId === agent.id ? 'text-blue-500' : 'text-gray-400'}`} />
