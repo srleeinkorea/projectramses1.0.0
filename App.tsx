@@ -17,6 +17,80 @@ const BookOpenIcon: React.FC<{ className?: string }> = (props) => (
   </svg>
 );
 
+// Brand Logo Component
+const BrandLogo: React.FC<{ department: Department }> = ({ department }) => {
+  if (department === 'PEDIATRICS') {
+    return (
+      <div className="flex items-center gap-3 select-none">
+        <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 shadow-lg shadow-blue-500/20 text-white shrink-0">
+             {/* Lungs Icon Concept */}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                <path d="M7.5 4C5 4 3 6.5 3 10c0 4 2.5 8 5.5 8 1 0 1.5-1 1.5-1s-.5-2 0-3c.5-1 2-2 2-2V4h-4.5zM16.5 4h-4.5v8s1.5 1 2 2 .5 3 0 3c0 0 .5 1 1.5 1 3 0 5.5-4 5.5-8 0-3.5-2-6-4.5-6z" opacity="0.9" />
+                <circle cx="12" cy="5" r="1.5" className="text-white opacity-80" />
+            </svg>
+            <div className="absolute top-0 right-0 -mr-1 -mt-1 w-2.5 h-2.5 bg-white rounded-full flex items-center justify-center shadow-sm">
+                <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-pulse"></div>
+            </div>
+        </div>
+        <div className="flex flex-col justify-center">
+            <h1 className="text-xl font-bold text-slate-800 tracking-tight leading-none flex items-center gap-1">
+                V.Doc <span className="text-blue-600">PEDI-AIR</span>
+            </h1>
+            <span className="text-[9px] font-bold text-blue-400 uppercase tracking-widest mt-0.5">
+                Pediatric AI for Respiratory System
+            </span>
+        </div>
+      </div>
+    );
+  } else if (department === 'SURGERY') {
+     return (
+      <div className="flex items-center gap-3 select-none">
+        <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-teal-400 shadow-lg shadow-indigo-500/20 text-white shrink-0">
+            {/* Pulse/Heartbeat Icon */}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+            </svg>
+            <div className="absolute top-0 right-0 -mr-1 -mt-1 w-2.5 h-2.5 bg-white rounded-full flex items-center justify-center shadow-sm">
+                <div className="w-1.5 h-1.5 bg-teal-500 rounded-full animate-pulse"></div>
+            </div>
+        </div>
+        <div className="flex flex-col justify-center">
+            <h1 className="text-xl font-bold text-slate-800 tracking-tight leading-none flex items-center gap-1">
+                V.Doc <span className="text-indigo-600">G-PEP</span>
+            </h1>
+            <span className="text-[9px] font-bold text-indigo-400 uppercase tracking-widest mt-0.5">
+                General Surgery Post-op Recovery AI
+            </span>
+        </div>
+      </div>
+    );
+  } else { // COLORECTAL
+     return (
+      <div className="flex items-center gap-3 select-none">
+        <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-fuchsia-400 shadow-lg shadow-purple-500/20 text-white shrink-0">
+            {/* Loop/Intestine/Recurrence Icon */}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+                <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z" className="opacity-30" />
+                <path d="M12 7v5l3 3" />
+                <path d="M3.6 9a9 9 0 0 1 14.8-2.6L21 9M2.5 9h5v-5" />
+            </svg>
+            <div className="absolute top-0 right-0 -mr-1 -mt-1 w-2.5 h-2.5 bg-white rounded-full flex items-center justify-center shadow-sm">
+                <div className="w-1.5 h-1.5 bg-fuchsia-500 rounded-full animate-pulse"></div>
+            </div>
+        </div>
+        <div className="flex flex-col justify-center">
+            <h1 className="text-xl font-bold text-slate-800 tracking-tight leading-none flex items-center gap-1">
+                V.Doc <span className="text-purple-600">C-PEP</span>
+            </h1>
+            <span className="text-[9px] font-bold text-purple-400 uppercase tracking-widest mt-0.5">
+                Colorectal Recurrence Prediction AI
+            </span>
+        </div>
+      </div>
+    );
+  }
+};
+
 const App: React.FC = () => {
   const [department, setDepartment] = useState<Department>('PEDIATRICS');
   // Initialize agents based on the default department
@@ -285,15 +359,6 @@ const App: React.FC = () => {
 
   const selectedAgent = agents.find(agent => agent.id === selectedAgentId);
 
-  const getHeaderTitle = () => {
-    switch(department) {
-        case 'PEDIATRICS': return 'V.Doc PEDI-AIR';
-        case 'SURGERY': return 'V.Doc G-PEP';
-        case 'COLORECTAL': return 'V.Doc C-PEP';
-        default: return 'V.Doc';
-    }
-  };
-
   return (
     <>
       <style>{`
@@ -319,13 +384,9 @@ const App: React.FC = () => {
         <main className="flex-1 flex flex-col overflow-hidden relative">
           
           {/* Top Header */}
-          <header className="bg-white shadow-sm border-b border-gray-200 px-5 py-3 flex justify-between items-center h-14 shrink-0">
-                <div className="flex items-center gap-3">
-                    <h1 className="text-xl font-bold text-slate-800 tracking-tight">
-                    {getHeaderTitle()}
-                    </h1>
-                    <div className="h-3 w-px bg-gray-300"></div>
-                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Medical AI Control Center</p>
+          <header className="bg-white shadow-sm border-b border-gray-200 px-5 py-3 flex justify-between items-center h-16 shrink-0 z-20">
+                <div className="flex items-center">
+                    <BrandLogo department={department} />
                 </div>
                 <div className="flex items-center space-x-4">
                     <AlertCenter 
