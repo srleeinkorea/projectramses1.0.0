@@ -439,14 +439,8 @@ const App: React.FC = () => {
                      >
                         <agent.icon className={`h-4 w-4 mr-2 ${selectedAgentId === agent.id ? 'text-blue-500' : 'text-gray-400'}`} />
                         {agent.name}
-                        {/* Status Light */}
-                        <span className="ml-2.5 flex items-center">
-                            <span className={`block h-1.5 w-1.5 rounded-full ring-2 ring-white/50 transition-all ${
-                                agent.enabled 
-                                ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]' 
-                                : 'bg-gray-300'
-                            }`}></span>
-                        </span>
+                        {/* Status Indicator (Dot) */}
+                        <span className={`ml-2 w-2.5 h-2.5 rounded-full ${agent.enabled ? 'bg-green-500' : 'bg-gray-400'}`}></span>
                      </button>
                  ))}
 

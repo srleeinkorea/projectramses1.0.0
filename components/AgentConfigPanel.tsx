@@ -76,7 +76,10 @@ const AgentConfigPanel: React.FC<AgentConfigPanelProps> = ({ agent, onConfigChan
                     <agent.icon className="h-6 w-6" />
                 </div>
                 <div>
-                    <h2 className="text-lg font-bold text-gray-900 leading-tight">{agent.name}</h2>
+                    <h2 className="text-lg font-bold text-gray-900 leading-tight flex items-center gap-2">
+                        {agent.name}
+                        <span className={`w-2.5 h-2.5 rounded-full ${agent.enabled ? 'bg-green-500' : 'bg-gray-400'}`} title={agent.enabled ? 'Enabled' : 'Disabled'}></span>
+                    </h2>
                     <div className="flex items-center gap-2 mt-1">
                         <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md">ID: {agent.id}</span>
                         <span className="text-xs text-gray-400">|</span>
