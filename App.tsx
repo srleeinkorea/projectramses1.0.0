@@ -33,6 +33,36 @@ const App: React.FC = () => {
 
   // Ref for scrollable container
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const tabsContainerRef = useRef<HTMLDivElement>(null);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(false);
+
+  // Check scroll position for tabs
+  const checkScroll = useCallback(() => {
+    if (tabsContainerRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = tabsContainerRef.current;
+        setShowLeftArrow(scrollLeft > 0);
+        setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10); // buffer
+    }
+  }, []);
+
+  useEffect(() => {
+    checkScroll();
+    window.addEventListener('resize', checkScroll);
+    return () => window.removeEventListener('resize', checkScroll);
+  }, [checkScroll, agents]);
+
+  const scrollTabs = (direction: 'left' | 'right') => {
+      if (tabsContainerRef.current) {
+          const scrollAmount = 200;
+          tabsContainerRef.current.scrollBy({
+              left: direction === 'left' ? -scrollAmount : scrollAmount,
+              behavior: 'smooth'
+          });
+          setTimeout(checkScroll, 300);
+      }
+  };
+
 
   // Handle Department Switch
   const handleDepartmentChange = useCallback((newDept: Department) => {
@@ -289,12 +319,12 @@ const App: React.FC = () => {
         <main className="flex-1 flex flex-col overflow-hidden relative">
           
           {/* Top Header */}
-          <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4 flex justify-between items-center h-16 shrink-0">
-                <div className="flex items-center gap-4">
+          <header className="bg-white shadow-sm border-b border-gray-200 px-5 py-3 flex justify-between items-center h-14 shrink-0">
+                <div className="flex items-center gap-3">
                     <h1 className="text-xl font-bold text-slate-800 tracking-tight">
                     {getHeaderTitle()}
                     </h1>
-                    <div className="h-4 w-px bg-gray-300"></div>
+                    <div className="h-3 w-px bg-gray-300"></div>
                     <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Medical AI Control Center</p>
                 </div>
                 <div className="flex items-center space-x-4">
@@ -315,8 +345,24 @@ const App: React.FC = () => {
           </div>
 
           {/* Agent Navigation Tabs */}
-          <div className="bg-gray-50 border-b border-gray-200 pt-3 shrink-0">
-            <div className="flex items-center space-x-1 overflow-x-auto scrollbar-hide px-6">
+          <div className="bg-gray-50 border-b border-gray-200 pt-3 shrink-0 relative group">
+             {/* Left Scroll Button */}
+             {showLeftArrow && (
+                 <button 
+                    onClick={() => scrollTabs('left')}
+                    className="absolute left-0 top-3 bottom-0 w-8 bg-gradient-to-r from-gray-50 to-transparent z-10 flex items-center justify-center text-gray-400 hover:text-gray-600"
+                 >
+                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 bg-white/80 rounded-full shadow-sm" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                     </svg>
+                 </button>
+             )}
+
+            <div 
+                ref={tabsContainerRef}
+                onScroll={checkScroll}
+                className="flex items-center space-x-1 overflow-x-auto scrollbar-hide px-6 relative"
+            >
                  {/* Agent Tabs */}
                  {agents.map(agent => (
                      <button
@@ -325,17 +371,18 @@ const App: React.FC = () => {
                         className={`
                             flex items-center px-4 py-2.5 text-sm font-medium border-t border-l border-r rounded-t-lg whitespace-nowrap transition-all
                             ${selectedAgentId === agent.id 
-                                ? 'border-gray-200 bg-white text-blue-600 shadow-[0_-2px_4px_rgba(0,0,0,0.02)] translate-y-[1px]' 
+                                ? 'border-gray-200 bg-white text-blue-600 shadow-[0_-2px_4px_rgba(0,0,0,0.02)] translate-y-[1px] z-10' 
                                 : 'border-transparent bg-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-100'
                             }
                         `}
                      >
                         <agent.icon className={`h-4 w-4 mr-2 ${selectedAgentId === agent.id ? 'text-blue-500' : 'text-gray-400'}`} />
                         {agent.name}
+                        {/* Status Light */}
                         <span className="ml-2.5 flex items-center">
-                            <span className={`block h-2 w-2 rounded-full ring-2 ring-white transition-all ${
+                            <span className={`block h-1.5 w-1.5 rounded-full ring-2 ring-white/50 transition-all ${
                                 agent.enabled 
-                                ? 'bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.6)]' 
+                                ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]' 
                                 : 'bg-gray-300'
                             }`}></span>
                         </span>
@@ -345,7 +392,7 @@ const App: React.FC = () => {
                  {/* New Agent Button */}
                  <button
                     onClick={() => setIsCreateModalOpen(true)}
-                    className="ml-1 p-1.5 rounded text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                    className="ml-1 p-1.5 rounded text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors shrink-0"
                     title="새 에이전트 추가"
                  >
                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -353,15 +400,15 @@ const App: React.FC = () => {
                      </svg>
                  </button>
 
-                 <div className="flex-1"></div>
+                 <div className="flex-1 min-w-[20px]"></div>
 
                  {/* Knowledge DB Tab */}
                  <button
                     onClick={() => setSelectedAgentId('knowledge-base')}
                     className={`
-                        flex items-center px-4 py-2.5 text-sm font-medium border-t border-l border-r rounded-t-lg whitespace-nowrap transition-all ml-4
+                        flex items-center px-4 py-2.5 text-sm font-medium border-t border-l border-r rounded-t-lg whitespace-nowrap transition-all ml-4 shrink-0
                         ${selectedAgentId === 'knowledge-base' 
-                             ? 'border-gray-200 bg-white text-indigo-600 shadow-[0_-2px_4px_rgba(0,0,0,0.02)] translate-y-[1px]' 
+                             ? 'border-gray-200 bg-white text-indigo-600 shadow-[0_-2px_4px_rgba(0,0,0,0.02)] translate-y-[1px] z-10' 
                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-100'
                         }
                     `}
@@ -370,6 +417,18 @@ const App: React.FC = () => {
                     Knowledge DB
                  </button>
             </div>
+
+            {/* Right Scroll Button */}
+             {showRightArrow && (
+                 <button 
+                    onClick={() => scrollTabs('right')}
+                    className="absolute right-0 top-3 bottom-0 w-8 bg-gradient-to-l from-gray-50 to-transparent z-10 flex items-center justify-center text-gray-400 hover:text-gray-600"
+                 >
+                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 bg-white/80 rounded-full shadow-sm" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                     </svg>
+                 </button>
+             )}
           </div>
 
           {/* Main Config/Content Area */}
@@ -392,6 +451,7 @@ const App: React.FC = () => {
                     onSaveTemplate={handleSaveTemplate}
                     onDeleteTemplate={handleDeleteTemplate}
                     allKnowledgeSources={knowledgeSources}
+                    currentPatient={currentPatient}
                     />
                 ) : (
                 <div className="flex items-center justify-center h-full">
