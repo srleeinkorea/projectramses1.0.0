@@ -63,7 +63,7 @@ const PatientContext: React.FC<PatientContextProps> = ({ department, patient }) 
     }
 
     return (
-        <div className={`flex items-center px-3 py-1.5 rounded-full border border-opacity-10 ${badgeClass} border-current ml-6`}>
+        <div className={`flex items-center px-3 py-1.5 rounded-full border border-opacity-10 ${badgeClass} border-current ml-auto md:ml-6`}>
             {icon}
             <span className="ml-2 text-xs font-bold mr-2">{title}</span>
             <span className="text-lg font-extrabold">{score}</span>
@@ -74,28 +74,28 @@ const PatientContext: React.FC<PatientContextProps> = ({ department, patient }) 
   };
 
   return (
-    <div className="flex items-center justify-between px-6 py-3 w-full bg-white">
-      <div className="flex items-center min-w-0">
+    <div className="flex flex-col md:flex-row items-start md:items-center justify-between px-4 sm:px-6 py-3 w-full bg-white gap-3 md:gap-0">
+      <div className="flex items-center min-w-0 w-full md:w-auto">
          <div className={`flex items-center justify-center h-10 w-10 rounded-full flex-shrink-0 bg-gray-100 text-gray-400 mr-3`}>
              {isMale ? <MaleIcon className="h-6 w-6 text-blue-500" /> : <FemaleIcon className="h-6 w-6 text-pink-500" />}
          </div>
-         <div className="flex flex-col">
+         <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-2">
                 <h2 className="text-xl font-bold text-gray-900 leading-none">{patient.name}</h2>
-                <span className="text-xs text-gray-500 font-medium">({patient.gender}/{patient.age}세)</span>
-                {isSurgery && <span className="px-1.5 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded border border-indigo-100">G-PEP</span>}
-                {isColorectal && <span className="px-1.5 py-0.5 bg-purple-50 text-purple-700 text-[10px] font-bold rounded border border-purple-100">C-PEP</span>}
+                <span className="text-xs text-gray-500 font-medium whitespace-nowrap">({patient.gender}/{patient.age}세)</span>
+                {isSurgery && <span className="px-1.5 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded border border-indigo-100 whitespace-nowrap">G-PEP & REHAB</span>}
+                {isColorectal && <span className="px-1.5 py-0.5 bg-purple-50 text-purple-700 text-[10px] font-bold rounded border border-purple-100 whitespace-nowrap">C-PEP & REHAB</span>}
             </div>
-            <div className="flex items-center gap-2 mt-1">
-                <span className="text-xs font-semibold text-gray-700 truncate max-w-[240px]" title={patient.diagnosis}>{patient.diagnosis}</span>
-                <span className="text-[10px] text-gray-300">|</span>
-                <span className="text-xs text-gray-500 truncate max-w-[350px]" title={patient.status}>{patient.status}</span>
+            <div className="flex items-center gap-2 mt-1 min-w-0">
+                <span className="text-xs font-semibold text-gray-700 truncate max-w-[150px] sm:max-w-[240px]" title={patient.diagnosis}>{patient.diagnosis}</span>
+                <span className="text-[10px] text-gray-300 flex-shrink-0">|</span>
+                <span className="text-xs text-gray-500 truncate max-w-[180px] sm:max-w-[350px]" title={patient.status}>{patient.status}</span>
             </div>
          </div>
       </div>
       
       {/* Complication or Recurrence Score - Right aligned */}
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 w-full md:w-auto flex justify-end">
            {renderComplicationScore(patient)}
       </div>
     </div>

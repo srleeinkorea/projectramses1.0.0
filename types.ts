@@ -7,6 +7,7 @@ export enum AgentCategory {
   MONITORING = "환자 모니터링",
   CONVERSATIONAL = "의료 상담 지원",
   REPORTING = "의료진 보고",
+  TRIAGE = "홈케어 트리아제",
 }
 
 export enum AgentType {
@@ -14,6 +15,7 @@ export enum AgentType {
   MONITORING_VENTILATOR = "MONITORING_VENTILATOR",
   CONVERSATIONAL_CHATBOT = "CONVERSATIONAL_CHATBOT",
   REPORTING_SUMMARY = "REPORTING_SUMMARY",
+  MANAGEMENT_TRIAGE = "MANAGEMENT_TRIAGE",
 }
 
 export interface BehavioralRule {
@@ -86,6 +88,9 @@ export interface VentilatorConfig {
     leakPercentage: boolean;
     peep: boolean;
     drivingPressure: boolean;
+    fio2?: boolean;
+    minuteVolume?: boolean;
+    ieRatio?: boolean;
   };
   lowTidalVolumeThreshold: number; // in mL/kg
   highTidalVolumeThreshold: number; // in mL/kg
@@ -100,6 +105,22 @@ export interface VentilatorConfig {
   emrIntegration: EMRIntegrationConfig;
   literatureSearch: MedicalLiteratureSearchConfig;
   evaluation: EvaluationMetricConfig;
+  notificationPreferences: NotificationPreferences;
+}
+
+export interface TriageCriteria {
+  id: string;
+  level: 'red' | 'yellow' | 'green';
+  description: string;
+  symptoms: string[];
+  action: string;
+}
+
+export interface TriageConfig {
+  protocols: TriageCriteria[];
+  autoAlertGuardian: boolean;
+  knowledgeSourceIds: string[];
+  emrIntegration: EMRIntegrationConfig;
   notificationPreferences: NotificationPreferences;
 }
 
@@ -144,7 +165,7 @@ export interface ReportingConfig {
   evaluation: EvaluationMetricConfig;
 }
 
-export type AgentConfig = MonitoringConfig | ChatbotConfig | ReportingConfig | VentilatorConfig;
+export type AgentConfig = MonitoringConfig | ChatbotConfig | ReportingConfig | VentilatorConfig | TriageConfig;
 
 export interface Agent<T extends AgentConfig> {
   id: string;

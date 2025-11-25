@@ -46,9 +46,10 @@ const BrandLogo: React.FC<{ department: Department }> = ({ department }) => {
      return (
       <div className="flex items-center gap-3 select-none">
         <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-teal-400 shadow-lg shadow-indigo-500/20 text-white shrink-0">
-            {/* Pulse/Heartbeat Icon */}
+            {/* Gastric/Stomach Icon */}
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+               <path d="M6 5a2 2 0 0 1 2-2h1.5a2 2 0 0 1 2 1l1 2a2 2 0 0 0 2 1h1a2 2 0 0 1 2 2v2a2 2 0 0 1-1 1.73V19a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V13a2 2 0 0 1 2-2h1" />
+               <path d="M8 12h3" opacity="0.5"/>
             </svg>
             <div className="absolute top-0 right-0 -mr-1 -mt-1 w-2.5 h-2.5 bg-white rounded-full flex items-center justify-center shadow-sm">
                 <div className="w-1.5 h-1.5 bg-teal-500 rounded-full animate-pulse"></div>
@@ -56,10 +57,10 @@ const BrandLogo: React.FC<{ department: Department }> = ({ department }) => {
         </div>
         <div className="flex flex-col justify-center">
             <h1 className="text-xl font-bold text-slate-800 tracking-tight leading-none flex items-center gap-1">
-                V.Doc <span className="text-indigo-600">G-PEP</span>
+                V.Doc <span className="text-indigo-600">G-PEP</span> & <span className="text-teal-600">REHAB</span>
             </h1>
             <span className="text-[9px] font-bold text-indigo-400 uppercase tracking-widest mt-0.5">
-                General Surgery Post-op Recovery AI
+                Predictive Engine for Prognosis & Home Rehab
             </span>
         </div>
       </div>
@@ -68,11 +69,11 @@ const BrandLogo: React.FC<{ department: Department }> = ({ department }) => {
      return (
       <div className="flex items-center gap-3 select-none">
         <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-fuchsia-400 shadow-lg shadow-purple-500/20 text-white shrink-0">
-            {/* Loop/Intestine/Recurrence Icon */}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-                <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z" className="opacity-30" />
-                <path d="M12 7v5l3 3" />
-                <path d="M3.6 9a9 9 0 0 1 14.8-2.6L21 9M2.5 9h5v-5" />
+            {/* Colon/Intestine Icon */}
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+                <path d="M8 4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4Z" opacity="0.4"/>
+                <path d="M12 4v16" />
+                <path d="M4 12h16" />
             </svg>
             <div className="absolute top-0 right-0 -mr-1 -mt-1 w-2.5 h-2.5 bg-white rounded-full flex items-center justify-center shadow-sm">
                 <div className="w-1.5 h-1.5 bg-fuchsia-500 rounded-full animate-pulse"></div>
@@ -80,10 +81,10 @@ const BrandLogo: React.FC<{ department: Department }> = ({ department }) => {
         </div>
         <div className="flex flex-col justify-center">
             <h1 className="text-xl font-bold text-slate-800 tracking-tight leading-none flex items-center gap-1">
-                V.Doc <span className="text-purple-600">C-PEP</span>
+                V.Doc <span className="text-purple-600">C-PEP</span> & <span className="text-fuchsia-600">REHAB</span>
             </h1>
             <span className="text-[9px] font-bold text-purple-400 uppercase tracking-widest mt-0.5">
-                Colorectal Recurrence Prediction AI
+                Predictive Engine for Prognosis & Home Rehab
             </span>
         </div>
       </div>
@@ -100,6 +101,9 @@ const App: React.FC = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [knowledgeSources, setKnowledgeSources] = useState<KnowledgeSource[]>(INITIAL_KNOWLEDGE_SOURCES);
   const [alerts, setAlerts] = useState<Alert[]>([]);
+
+  // Mobile sidebar state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Patient Management
   const availablePatients = useMemo(() => MOCK_PATIENTS.filter(p => p.department === department), [department]);
@@ -161,6 +165,9 @@ const App: React.FC = () => {
     if (newPatients.length > 0) {
         setCurrentPatient(newPatients[0]);
     }
+    
+    // Auto-close sidebar on mobile when dept changes
+    setIsSidebarOpen(false);
   }, []);
 
   useEffect(() => {
@@ -371,24 +378,47 @@ const App: React.FC = () => {
         }
       `}</style>
       <div className="flex h-screen bg-slate-50 font-sans text-slate-900">
+        
+        {/* Mobile Sidebar Overlay */}
+        {isSidebarOpen && (
+            <div 
+                className="fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-blur-sm"
+                onClick={() => setIsSidebarOpen(false)}
+            ></div>
+        )}
+
         {/* Left Sidebar: Patient List */}
         <Sidebar
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
           department={department}
           onDepartmentChange={handleDepartmentChange}
           patients={availablePatients}
           selectedPatientId={currentPatient?.id || ''}
-          onSelectPatient={setCurrentPatient}
+          onSelectPatient={(patient) => {
+            setCurrentPatient(patient);
+            setIsSidebarOpen(false); // Close sidebar on selection (mobile)
+          }}
         />
 
         {/* Main Content Area */}
-        <main className="flex-1 flex flex-col overflow-hidden relative">
+        <main className="flex-1 flex flex-col overflow-hidden relative w-full">
           
           {/* Top Header */}
-          <header className="bg-white shadow-sm border-b border-gray-200 px-5 py-3 flex justify-between items-center h-16 shrink-0 z-20">
-                <div className="flex items-center">
+          <header className="bg-white shadow-sm border-b border-gray-200 px-4 sm:px-5 py-3 flex justify-between items-center h-16 shrink-0 z-20">
+                <div className="flex items-center gap-3">
+                     {/* Mobile Menu Button */}
+                    <button 
+                        className="lg:hidden p-2 -ml-2 text-gray-500 hover:text-gray-700"
+                        onClick={() => setIsSidebarOpen(true)}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                    </button>
                     <BrandLogo department={department} />
                 </div>
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2 sm:space-x-4">
                     <AlertCenter 
                         alerts={alerts} 
                         onMarkAsRead={handleMarkAsRead} 
@@ -407,13 +437,14 @@ const App: React.FC = () => {
 
           {/* Agent Navigation Tabs */}
           <div className="bg-gray-50 border-b border-gray-200 pt-3 shrink-0 relative group">
-             {/* Left Scroll Button */}
+             {/* Left Scroll Mask & Button */}
+             <div className={`absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none transition-opacity duration-300 ${showLeftArrow ? 'opacity-100' : 'opacity-0'}`}></div>
              {showLeftArrow && (
                  <button 
                     onClick={() => scrollTabs('left')}
-                    className="absolute left-0 top-3 bottom-0 w-8 bg-gradient-to-r from-gray-50 to-transparent z-10 flex items-center justify-center text-gray-400 hover:text-gray-600"
+                    className="absolute left-0 top-3 bottom-0 w-6 bg-transparent z-20 flex items-center justify-center text-gray-400 hover:text-gray-600"
                  >
-                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 bg-white/80 rounded-full shadow-sm" viewBox="0 0 20 20" fill="currentColor">
+                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 bg-white/90 rounded-full shadow-sm" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
                      </svg>
                  </button>
@@ -422,7 +453,7 @@ const App: React.FC = () => {
             <div 
                 ref={tabsContainerRef}
                 onScroll={checkScroll}
-                className="flex items-center space-x-1 overflow-x-auto scrollbar-hide px-6 relative"
+                className="flex items-center space-x-1 overflow-x-auto scrollbar-hide px-2 sm:px-6 relative"
             >
                  {/* Agent Tabs */}
                  {agents.map(agent => (
@@ -430,7 +461,7 @@ const App: React.FC = () => {
                         key={agent.id}
                         onClick={() => setSelectedAgentId(agent.id)}
                         className={`
-                            flex items-center px-4 py-2.5 text-sm font-medium border-t border-l border-r rounded-t-lg whitespace-nowrap transition-all
+                            flex items-center px-3 sm:px-4 py-2.5 text-sm font-medium border-t border-l border-r rounded-t-lg whitespace-nowrap transition-all select-none
                             ${selectedAgentId === agent.id 
                                 ? 'border-gray-200 bg-white text-blue-600 shadow-[0_-2px_4px_rgba(0,0,0,0.02)] translate-y-[1px] z-10' 
                                 : 'border-transparent bg-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-100'
@@ -439,8 +470,10 @@ const App: React.FC = () => {
                      >
                         <agent.icon className={`h-4 w-4 mr-2 ${selectedAgentId === agent.id ? 'text-blue-500' : 'text-gray-400'}`} />
                         {agent.name}
-                        {/* Status Indicator (Dot) */}
-                        <span className={`ml-2 w-2.5 h-2.5 rounded-full ${agent.enabled ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                        {/* Status Light */}
+                        <div className={`ml-2 relative flex items-center justify-center w-2 h-2 rounded-full ${agent.enabled ? 'bg-green-500' : 'bg-gray-300'}`}>
+                             {agent.enabled && <span className="absolute w-2 h-2 bg-green-400 rounded-full animate-ping opacity-75"></span>}
+                        </div>
                      </button>
                  ))}
 
@@ -461,7 +494,7 @@ const App: React.FC = () => {
                  <button
                     onClick={() => setSelectedAgentId('knowledge-base')}
                     className={`
-                        flex items-center px-4 py-2.5 text-sm font-medium border-t border-l border-r rounded-t-lg whitespace-nowrap transition-all ml-4 shrink-0
+                        flex items-center px-3 sm:px-4 py-2.5 text-sm font-medium border-t border-l border-r rounded-t-lg whitespace-nowrap transition-all ml-4 shrink-0 select-none
                         ${selectedAgentId === 'knowledge-base' 
                              ? 'border-gray-200 bg-white text-indigo-600 shadow-[0_-2px_4px_rgba(0,0,0,0.02)] translate-y-[1px] z-10' 
                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-100'
@@ -473,13 +506,14 @@ const App: React.FC = () => {
                  </button>
             </div>
 
-            {/* Right Scroll Button */}
+            {/* Right Scroll Mask & Button */}
+             <div className={`absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none transition-opacity duration-300 ${showRightArrow ? 'opacity-100' : 'opacity-0'}`}></div>
              {showRightArrow && (
                  <button 
                     onClick={() => scrollTabs('right')}
-                    className="absolute right-0 top-3 bottom-0 w-8 bg-gradient-to-l from-gray-50 to-transparent z-10 flex items-center justify-center text-gray-400 hover:text-gray-600"
+                    className="absolute right-0 top-3 bottom-0 w-6 bg-transparent z-20 flex items-center justify-center text-gray-400 hover:text-gray-600"
                  >
-                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 bg-white/80 rounded-full shadow-sm" viewBox="0 0 20 20" fill="currentColor">
+                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 bg-white/90 rounded-full shadow-sm" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                      </svg>
                  </button>
@@ -489,9 +523,9 @@ const App: React.FC = () => {
           {/* Main Config/Content Area */}
           <div 
             ref={scrollContainerRef}
-            className="flex-1 p-6 overflow-y-auto bg-slate-50"
+            className="flex-1 p-4 sm:p-6 overflow-y-auto bg-slate-50 w-full"
           >
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-6xl mx-auto w-full">
                 {selectedAgentId === 'knowledge-base' ? (
                     <KnowledgeBasePanel 
                         knowledgeSources={knowledgeSources}

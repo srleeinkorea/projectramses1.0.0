@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Agent, AgentCategory, AgentType, MonitoringConfig, ChatbotConfig, ReportingConfig, VentilatorConfig, AgentConfig, KnowledgeSourceType, EMRIntegrationConfig, KnowledgeSource, MedicalLiteratureSearchConfig, BehavioralRule, EvaluationMetricConfig, Patient, Department, ComplicationRisk, NotificationPreferences } from './types';
+import { Agent, AgentCategory, AgentType, MonitoringConfig, ChatbotConfig, ReportingConfig, VentilatorConfig, TriageConfig, AgentConfig, KnowledgeSourceType, EMRIntegrationConfig, KnowledgeSource, MedicalLiteratureSearchConfig, BehavioralRule, EvaluationMetricConfig, Patient, Department, ComplicationRisk, NotificationPreferences } from './types';
 
 // HeroIcons as React Components
 const ChartBarIcon: React.FC<{ className?: string }> = (props) => (
@@ -30,6 +30,12 @@ const SignalIcon: React.FC<{ className?: string }> = (props) => (
 const PresentationChartLineIcon: React.FC<{ className?: string }> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" />
+  </svg>
+);
+
+const TrafficLightIcon: React.FC<{ className?: string }> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
   </svg>
 );
 
@@ -211,6 +217,9 @@ export const AGENT_TYPE_DETAILS: Record<AgentType, {
         leakPercentage: true,
         peep: true,
         drivingPressure: true,
+        fio2: true,
+        minuteVolume: true,
+        ieRatio: true,
       },
       lowTidalVolumeThreshold: 4,
       highTidalVolumeThreshold: 8,
@@ -260,6 +269,41 @@ export const AGENT_TYPE_DETAILS: Record<AgentType, {
       evaluation: DEFAULT_EVALUATION_METRIC_CONFIG,
     } as ReportingConfig,
   },
+  [AgentType.MANAGEMENT_TRIAGE]: {
+    label: '홈케어 트리아제 설정',
+    category: AgentCategory.TRIAGE,
+    icon: TrafficLightIcon,
+    defaultDescription: '환자 상태에 따른 위험 등급(Red/Yellow/Green)을 정의하고, 보호자에게 알림을 발송하는 기준을 설정합니다.',
+    defaultConfig: {
+      protocols: [
+        {
+          id: 'triage-red',
+          level: 'red',
+          description: '즉시 응급실 내원이 필요한 상태',
+          symptoms: ['의식 저하', 'SpO2 90% 미만 지속', '호흡 곤란 심화'],
+          action: '즉시 119 신고 및 응급실 이송 권고 알림'
+        },
+        {
+          id: 'triage-yellow',
+          level: 'yellow',
+          description: '의료진 상담이 필요한 상태',
+          symptoms: ['체온 38도 이상', '지속적인 통증 호소', '섭취량 감소'],
+          action: '담당 간호사에게 알림 전송 및 전화 상담 권고'
+        },
+        {
+          id: 'triage-green',
+          level: 'green',
+          description: '가정 내 관찰 가능한 상태',
+          symptoms: ['경미한 소화 불량', '일시적인 기침'],
+          action: '자가 모니터링 지속 및 일일 보고서 기록'
+        }
+      ],
+      autoAlertGuardian: true,
+      knowledgeSourceIds: [],
+      emrIntegration: DEFAULT_EMR_INTEGRATION_CONFIG,
+      notificationPreferences: DEFAULT_NOTIFICATION_PREFERENCES,
+    } as TriageConfig,
+  }
 };
 
 // Pediatric Agents (Default)
@@ -300,6 +344,9 @@ export const INITIAL_AGENTS_PEDIATRICS: Agent<any>[] = [
         leakPercentage: true,
         peep: true,
         drivingPressure: true,
+        fio2: true,
+        minuteVolume: true,
+        ieRatio: true,
       },
       lowTidalVolumeThreshold: 5,
       highTidalVolumeThreshold: 7,
@@ -358,7 +405,7 @@ export const INITIAL_AGENTS_PEDIATRICS: Agent<any>[] = [
   },
 ];
 
-// Surgery Agents (PEP)
+// Surgery Agents (G-PEP & REHAB)
 export const INITIAL_AGENTS_PEP: Agent<any>[] = [
     {
       id: 'agent-pep-1',
@@ -402,6 +449,37 @@ export const INITIAL_AGENTS_PEP: Agent<any>[] = [
       } as ChatbotConfig,
       enabled: true,
     },
+     {
+      id: 'agent-pep-4',
+      name: '홈케어 응급 트리아제',
+      description: '퇴원 후 가정에서 발생하는 증상의 경중을 판단하고, 보호자에게 적절한 대처 방안(응급실 방문 등)을 안내하는 알림 기준을 설정합니다.',
+      category: AgentCategory.TRIAGE,
+      type: AgentType.MANAGEMENT_TRIAGE,
+      icon: TrafficLightIcon,
+      config: {
+          protocols: [
+              {
+                  id: 'postop-red',
+                  level: 'red',
+                  description: '즉각적인 의학적 개입이 필요한 응급 상황',
+                  symptoms: ['수술 부위 대량 출혈', '지속적인 고열(39도 이상)', '심한 복통 및 복부 팽만'],
+                  action: '즉시 응급실 이송 및 당직의 호출'
+              },
+              {
+                  id: 'postop-yellow',
+                  level: 'yellow',
+                  description: '의료진 확인이 필요한 주의 상황',
+                  symptoms: ['배액관 배액 양상 변화', '오심 및 구토 지속', '수술 부위 발적'],
+                  action: '외래 예약 조정 및 전화 상담 진행'
+              }
+          ],
+          autoAlertGuardian: true,
+          knowledgeSourceIds: ['kb-s1'],
+          emrIntegration: DEFAULT_EMR_INTEGRATION_CONFIG,
+          notificationPreferences: DEFAULT_NOTIFICATION_PREFERENCES,
+      } as TriageConfig,
+      enabled: true,
+    },
     {
       id: 'agent-pep-3',
       name: '회진 브리핑 리포트',
@@ -426,7 +504,7 @@ export const INITIAL_AGENTS_PEP: Agent<any>[] = [
     },
   ];
 
-// Colorectal Agents
+// Colorectal Agents (C-PEP & REHAB)
 export const INITIAL_AGENTS_COLORECTAL: Agent<any>[] = [
   {
     id: 'agent-crc-1',
@@ -464,6 +542,37 @@ export const INITIAL_AGENTS_COLORECTAL: Agent<any>[] = [
       literatureSearch: DEFAULT_LITERATURE_SEARCH_CONFIG,
       evaluation: DEFAULT_EVALUATION_METRIC_CONFIG,
     } as ChatbotConfig,
+    enabled: true,
+  },
+  {
+    id: 'agent-crc-4',
+    name: '장루 합병증 트리아제',
+    description: '장루 주변 피부 문제나 배설 양상 변화를 모니터링하고, 합병증 징후 발생 시 위험도에 따라 보호자에게 알림을 제공합니다.',
+    category: AgentCategory.TRIAGE,
+    type: AgentType.MANAGEMENT_TRIAGE,
+    icon: TrafficLightIcon,
+    config: {
+        protocols: [
+            {
+                id: 'stoma-red',
+                level: 'red',
+                description: '장루 괴사 및 허혈 의심',
+                symptoms: ['장루 색깔이 검거나 보라색으로 변함', '지속적인 출혈', '심한 복통'],
+                action: '즉시 병원 방문 요망'
+            },
+            {
+                id: 'stoma-yellow',
+                level: 'yellow',
+                description: '피부 손상 및 자극',
+                symptoms: ['장루 주변 피부 발적', '따가움', '경미한 출혈'],
+                action: '장루 전문 간호사 상담 및 사진 전송 권고'
+            }
+        ],
+        autoAlertGuardian: true,
+        knowledgeSourceIds: ['kb-c2'],
+        emrIntegration: DEFAULT_EMR_INTEGRATION_CONFIG,
+        notificationPreferences: DEFAULT_NOTIFICATION_PREFERENCES,
+    } as TriageConfig,
     enabled: true,
   },
   {

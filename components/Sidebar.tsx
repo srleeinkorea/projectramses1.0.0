@@ -3,6 +3,8 @@ import React, { useState, useMemo } from 'react';
 import { Department, Patient } from '../types';
 
 interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
   department: Department;
   onDepartmentChange: (dept: Department) => void;
   patients: Patient[];
@@ -28,7 +30,16 @@ const ArrowPathIcon: React.FC<{ className?: string }> = (props) => (
     </svg>
 );
 
+const XMarkIcon: React.FC<{ className?: string }> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+  </svg>
+);
+
+
 const Sidebar: React.FC<SidebarProps> = ({ 
+  isOpen,
+  onClose,
   department, 
   onDepartmentChange, 
   patients, 
@@ -85,94 +96,109 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <aside className="w-72 bg-white border-r border-gray-200 flex flex-col h-full z-20 shadow-xl shadow-gray-200/50 shrink-0">
-      <div className="p-3 border-b border-gray-100 space-y-2.5 bg-gray-50/50">
-        <div>
-            <div className="relative">
-                <select
-                    id="dept-select"
-                    value={department}
-                    onChange={(e) => onDepartmentChange(e.target.value as Department)}
-                    className="block w-full pl-3 pr-8 py-1.5 border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm font-bold rounded-md bg-white text-gray-800 cursor-pointer shadow-sm transition-colors"
-                >
-                    <option value="PEDIATRICS">소아청소년과</option>
-                    <option value="SURGERY">외과 (G-PEP)</option>
-                    <option value="COLORECTAL">대장항문외과 (C-PEP)</option>
-                </select>
-            </div>
-        </div>
-        
-        {/* Search & Sort */}
-        <div className="space-y-2">
-            <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
-                    <SearchIcon className="h-3.5 w-3.5 text-gray-400" />
-                </div>
-                <input
-                    type="text"
-                    placeholder="이름, 진단명 검색..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="block w-full pl-8 pr-3 py-1.5 border border-gray-200 rounded-md leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-xs"
-                />
-            </div>
-            <div className="flex space-x-1">
-                 <button onClick={() => setSortBy('severity')} className={`flex-1 py-1 rounded text-[10px] font-medium border transition-colors ${sortBy === 'severity' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'}`}>
-                    위험도순
-                 </button>
-                 <button onClick={() => setSortBy('name')} className={`flex-1 py-1 rounded text-[10px] font-medium border transition-colors ${sortBy === 'name' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'}`}>
-                    이름순
-                 </button>
-                 <button onClick={() => setSortBy('age')} className={`flex-1 py-1 rounded text-[10px] font-medium border transition-colors ${sortBy === 'age' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'}`}>
-                    나이순
-                 </button>
-            </div>
-        </div>
-        
-        <div className="flex justify-between items-center text-[10px] text-gray-400 px-1 pt-1">
-            <span>환자 목록</span>
-            <span className="font-semibold">{filteredPatients.length}명</span>
-        </div>
-      </div>
-
-      <nav className="flex-1 overflow-y-auto">
-        <ul className="divide-y divide-gray-100">
-            {filteredPatients.map((patient) => (
-            <li key={patient.id}>
-                <button
-                    onClick={() => onSelectPatient(patient)}
-                    className={`w-full text-left px-3 py-3 hover:bg-gray-50 transition-all duration-200 flex flex-col space-y-0.5 relative border-l-[3px] ${
-                        selectedPatientId === patient.id 
-                        ? 'bg-blue-50/40 border-blue-500' 
-                        : 'border-transparent'
-                    }`}
-                >
-                    <div className="flex justify-between items-start w-full mb-0.5">
-                        <div className="flex items-center space-x-1.5">
-                            <span className={`text-sm font-bold ${selectedPatientId === patient.id ? 'text-blue-700' : 'text-gray-800'}`}>
-                                {patient.name}
-                            </span>
-                            <span className="text-xs text-gray-500">({patient.gender}/{patient.age})</span>
-                        </div>
-                        {renderRiskBadge(patient)}
-                    </div>
-                    <p className="text-xs text-gray-600 line-clamp-1">{patient.diagnosis}</p>
-                    <p className="text-[10px] text-gray-400 line-clamp-1">{patient.status}</p>
+    <>
+        <aside 
+            className={`
+                fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-gray-200 flex flex-col h-full shadow-xl shadow-gray-200/50 shrink-0 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static
+                ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+            `}
+        >
+        <div className="p-3 border-b border-gray-100 space-y-2.5 bg-gray-50/50">
+            {/* Mobile Header in Sidebar */}
+            <div className="flex items-center justify-between lg:hidden mb-2">
+                <span className="text-sm font-bold text-gray-700">환자 선택</span>
+                <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+                    <XMarkIcon className="h-5 w-5" />
                 </button>
-            </li>
-            ))}
-            {filteredPatients.length === 0 && (
-                <li className="p-8 text-center text-gray-400 text-xs">
-                    검색 결과가 없습니다.
+            </div>
+
+            <div>
+                <div className="relative">
+                    <select
+                        id="dept-select"
+                        value={department}
+                        onChange={(e) => onDepartmentChange(e.target.value as Department)}
+                        className="block w-full pl-3 pr-8 py-1.5 border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm font-bold rounded-md bg-white text-gray-800 cursor-pointer shadow-sm transition-colors"
+                    >
+                        <option value="PEDIATRICS">소아청소년과</option>
+                        <option value="SURGERY">G-PEP & REHAB (외과)</option>
+                        <option value="COLORECTAL">C-PEP & REHAB (대장항문)</option>
+                    </select>
+                </div>
+            </div>
+            
+            {/* Search & Sort */}
+            <div className="space-y-2">
+                <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
+                        <SearchIcon className="h-3.5 w-3.5 text-gray-400" />
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="이름, 진단명 검색..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="block w-full pl-8 pr-3 py-1.5 border border-gray-200 rounded-md leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-xs"
+                    />
+                </div>
+                <div className="flex space-x-1">
+                    <button onClick={() => setSortBy('severity')} className={`flex-1 py-1 rounded text-[10px] font-medium border transition-colors ${sortBy === 'severity' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'}`}>
+                        위험도순
+                    </button>
+                    <button onClick={() => setSortBy('name')} className={`flex-1 py-1 rounded text-[10px] font-medium border transition-colors ${sortBy === 'name' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'}`}>
+                        이름순
+                    </button>
+                    <button onClick={() => setSortBy('age')} className={`flex-1 py-1 rounded text-[10px] font-medium border transition-colors ${sortBy === 'age' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'}`}>
+                        나이순
+                    </button>
+                </div>
+            </div>
+            
+            <div className="flex justify-between items-center text-[10px] text-gray-400 px-1 pt-1">
+                <span>환자 목록</span>
+                <span className="font-semibold">{filteredPatients.length}명</span>
+            </div>
+        </div>
+
+        <nav className="flex-1 overflow-y-auto">
+            <ul className="divide-y divide-gray-100">
+                {filteredPatients.map((patient) => (
+                <li key={patient.id}>
+                    <button
+                        onClick={() => onSelectPatient(patient)}
+                        className={`w-full text-left px-3 py-3 hover:bg-gray-50 transition-all duration-200 flex flex-col space-y-0.5 relative border-l-[3px] ${
+                            selectedPatientId === patient.id 
+                            ? 'bg-blue-50/40 border-blue-500' 
+                            : 'border-transparent'
+                        }`}
+                    >
+                        <div className="flex justify-between items-start w-full mb-0.5">
+                            <div className="flex items-center space-x-1.5">
+                                <span className={`text-sm font-bold ${selectedPatientId === patient.id ? 'text-blue-700' : 'text-gray-800'}`}>
+                                    {patient.name}
+                                </span>
+                                <span className="text-xs text-gray-500">({patient.gender}/{patient.age})</span>
+                            </div>
+                            {renderRiskBadge(patient)}
+                        </div>
+                        <p className="text-xs text-gray-600 line-clamp-1">{patient.diagnosis}</p>
+                        <p className="text-[10px] text-gray-400 line-clamp-1">{patient.status}</p>
+                    </button>
                 </li>
-            )}
-        </ul>
-      </nav>
-      
-      <div className="p-2 border-t border-gray-200 bg-gray-50 text-center text-[10px] text-gray-400">
-        <p className="font-medium text-gray-500">RAMSES AI Control</p>
-      </div>
-    </aside>
+                ))}
+                {filteredPatients.length === 0 && (
+                    <li className="p-8 text-center text-gray-400 text-xs">
+                        검색 결과가 없습니다.
+                    </li>
+                )}
+            </ul>
+        </nav>
+        
+        <div className="p-2 border-t border-gray-200 bg-gray-50 text-center text-[10px] text-gray-400">
+            <p className="font-medium text-gray-500">RAMSES AI Control</p>
+        </div>
+        </aside>
+    </>
   );
 };
 

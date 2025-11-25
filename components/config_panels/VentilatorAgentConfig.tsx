@@ -29,7 +29,10 @@ const PARAMETER_LABELS: Record<keyof VentilatorConfig['parameters'], string> = {
   respiratoryRate: '호흡수 (RR)',
   leakPercentage: '누출률 (%)',
   peep: '호기말 양압 (PEEP)',
-  drivingPressure: '구동압 (Driving Pressure)'
+  drivingPressure: '구동압 (Driving Pressure)',
+  fio2: '흡입 산소 농도 (FiO2)',
+  minuteVolume: '분당 환기량 (Minute Volume)',
+  ieRatio: 'I:E 비율 (I:E Ratio)'
 };
 
 const EMR_DATA_POINT_LABELS: Record<keyof EMRDataPoints, string> = {

@@ -6,6 +6,7 @@ import ChatbotAgentConfigPanel from './config_panels/ChatbotAgentConfig';
 import ReportingAgentConfigPanel from './config_panels/ReportingAgentConfig';
 import VentilatorAgentConfigPanel from './config_panels/VentilatorAgentConfig';
 import RecurrencePredictionConfigPanel from './config_panels/RecurrencePredictionConfigPanel';
+import TriageAgentConfigPanel from './config_panels/TriageAgentConfig';
 import ToggleSwitch from './common/ToggleSwitch';
 import Modal from './common/Modal';
 
@@ -58,6 +59,8 @@ const AgentConfigPanel: React.FC<AgentConfigPanelProps> = ({ agent, onConfigChan
         return <ChatbotAgentConfigPanel agent={agent} onConfigChange={onConfigChange} allKnowledgeSources={allKnowledgeSources} />;
       case AgentType.REPORTING_SUMMARY:
         return <ReportingAgentConfigPanel agent={agent} onConfigChange={onConfigChange} />;
+      case AgentType.MANAGEMENT_TRIAGE:
+        return <TriageAgentConfigPanel agent={agent} onConfigChange={onConfigChange} />;
       default:
         return <p>이 에이전트 유형에 대한 설정이 없습니다.</p>;
     }
