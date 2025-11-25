@@ -1,0 +1,5 @@
+{
+  "name": "RAMSES",
+  "description": "V.Doc PEDI-AIR 제품군을 위한 AI 에이전트 컨트롤 센터입니다. 환자 모니터링, 의료 상담 지원, 의료진 보고 등 다양한 PEDI-AIR 에이전트를 설정하고 관리하여 홈케어의 질을 높입니다.",
+  "requestFramePermissions": []
+}
