@@ -68,20 +68,20 @@ const BrandLogo: React.FC<{ department: Department }> = ({ department }) => {
   } else { // COLORECTAL
      return (
       <div className="flex items-center gap-3 select-none">
-        <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-fuchsia-400 shadow-lg shadow-purple-500/20 text-white shrink-0">
-            {/* Colon/Intestine Icon (Loop concept) */}
+        <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-600 to-purple-500 shadow-lg shadow-purple-500/20 text-white shrink-0">
+            {/* Colon/Intestine Icon (Loop concept) - Refined */}
              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-                <path d="M8 4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4Z" opacity="0.4"/>
-                <path d="M12 4v16" />
-                <path d="M4 12h16" />
+                <path d="M9 3h6a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z" />
+                <path d="M6 9h12" opacity="0.3" />
+                <path d="M6 15h12" opacity="0.3" />
             </svg>
             <div className="absolute top-0 right-0 -mr-1 -mt-1 w-2.5 h-2.5 bg-white rounded-full flex items-center justify-center shadow-sm">
-                <div className="w-1.5 h-1.5 bg-fuchsia-500 rounded-full animate-pulse"></div>
+                <div className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-pulse"></div>
             </div>
         </div>
         <div className="flex flex-col justify-center">
             <h1 className="text-xl font-bold text-slate-800 tracking-tight leading-none flex items-center gap-1">
-                V.Doc <span className="text-purple-600">C-PEP</span> & <span className="text-fuchsia-600">REHAB</span>
+                V.Doc <span className="text-fuchsia-600">C-PEP</span> & <span className="text-purple-600">REHAB</span>
             </h1>
             <span className="text-[9px] font-bold text-purple-400 uppercase tracking-widest mt-0.5">
                 Predictive Engine for Prognosis & Home Rehab

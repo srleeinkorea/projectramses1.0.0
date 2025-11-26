@@ -88,7 +88,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
 
     return (
-        <div className={`flex items-center space-x-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${colorClass}`}>
+        <div className={`flex items-center space-x-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${colorClass}`} title={`Risk Level: ${level}`}>
             <span>{icon}</span>
             <span>{score}</span>
         </div>
@@ -120,7 +120,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                         onChange={(e) => onDepartmentChange(e.target.value as Department)}
                         className="block w-full pl-3 pr-8 py-1.5 border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm font-bold rounded-md bg-white text-gray-800 cursor-pointer shadow-sm transition-colors"
                     >
-                        <option value="PEDIATRICS">소아청소년과</option>
+                        <option value="PEDIATRICS">PEDIATRIC (소아청소년과)</option>
                         <option value="SURGERY">G-PEP & REHAB (외과)</option>
                         <option value="COLORECTAL">C-PEP & REHAB (대장항문)</option>
                     </select>

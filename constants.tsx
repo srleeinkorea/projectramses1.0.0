@@ -170,9 +170,9 @@ export const INITIAL_KNOWLEDGE_SOURCES: KnowledgeSource[] = [
   },
   {
     id: 'kb-c2',
-    name: '장루 관리 및 합병증 예방 가이드',
+    name: '항암 화학요법 부작용 관리 지침',
     type: KnowledgeSourceType.RECOMMENDATION,
-    description: '병원상처장루실금간호사회(KAWOC) 제공',
+    description: 'NCCN Guidelines for Supportive Care',
     enabled: true,
     isDeletable: true,
   }
@@ -299,6 +299,8 @@ export const AGENT_TYPE_DETAILS: Record<AgentType, {
         }
       ],
       autoAlertGuardian: true,
+      customPrompt: "",
+      ventilatorIntegration: false,
       knowledgeSourceIds: [],
       emrIntegration: DEFAULT_EMR_INTEGRATION_CONFIG,
       notificationPreferences: DEFAULT_NOTIFICATION_PREFERENCES,
@@ -379,6 +381,39 @@ export const INITIAL_AGENTS_PEDIATRICS: Agent<any>[] = [
       literatureSearch: { ...DEFAULT_LITERATURE_SEARCH_CONFIG, enabled: true, recency: '1y' },
       evaluation: { ...DEFAULT_EVALUATION_METRIC_CONFIG, enabled: true, factualityScoreThreshold: 98, evaluationAction: 'alert' },
     } as ChatbotConfig,
+    enabled: true,
+  },
+  {
+    id: 'agent-ped-triage',
+    name: '홈케어 트리아제 (Pediatric)',
+    description: '인공호흡기 데이터 및 증상을 종합하여 위험도를 판별하고, 단계별 행동 요령을 보호자에게 안내합니다.',
+    category: AgentCategory.TRIAGE,
+    type: AgentType.MANAGEMENT_TRIAGE,
+    icon: TrafficLightIcon,
+    config: {
+        protocols: [
+            {
+                id: 'peds-red',
+                level: 'red',
+                description: '즉시 응급실 이송',
+                symptoms: ['SpO2 90% 미만 지속', '청색증', '의식 저하'],
+                action: '119 신고 및 응급실 이송'
+            },
+            {
+                id: 'peds-yellow',
+                level: 'yellow',
+                description: '의료진 상담 필요',
+                symptoms: ['발열 (38도 이상)', '호흡수 증가', '가래 양 증가'],
+                action: '병원 연락 및 상담'
+            }
+        ],
+        autoAlertGuardian: true,
+        ventilatorIntegration: true,
+        customPrompt: "소아 PARDS 환자의 특성을 고려하여, 인공호흡기 알람(High Pressure)과 동시에 SpO2 저하가 관찰될 경우 즉시 Red Flag로 격상하십시오.",
+        knowledgeSourceIds: ['kb-1'],
+        emrIntegration: DEFAULT_EMR_INTEGRATION_CONFIG,
+        notificationPreferences: DEFAULT_NOTIFICATION_PREFERENCES,
+    } as TriageConfig,
     enabled: true,
   },
   {
@@ -530,8 +565,8 @@ export const INITIAL_AGENTS_COLORECTAL: Agent<any>[] = [
   },
   {
     id: 'agent-crc-2',
-    name: '장루 케어 가이드 챗봇',
-    description: '장루(Stoma) 관리법, 식이요법, 일상생활 적응에 대한 맞춤형 가이드를 제공합니다.',
+    name: '항암/식이 케어 가이드 챗봇',
+    description: '항암 화학요법 중 발생하는 부작용(구내염, 오심 등) 관리법 및 영양 섭취에 대한 맞춤형 가이드를 제공합니다.',
     category: AgentCategory.CONVERSATIONAL,
     type: AgentType.CONVERSATIONAL_CHATBOT,
     icon: ChatBubbleLeftRightIcon,
@@ -546,26 +581,26 @@ export const INITIAL_AGENTS_COLORECTAL: Agent<any>[] = [
   },
   {
     id: 'agent-crc-4',
-    name: '장루 합병증 트리아제',
-    description: '장루 주변 피부 문제나 배설 양상 변화를 모니터링하고, 합병증 징후 발생 시 위험도에 따라 보호자에게 알림을 제공합니다.',
+    name: '항암 부작용 트리아제',
+    description: '항암 치료 후 가정에서 발생하는 증상(발열, 설사 등)을 모니터링하고, 위험도(예: 호중구 감소성 발열)에 따라 적절한 대처를 안내합니다.',
     category: AgentCategory.TRIAGE,
     type: AgentType.MANAGEMENT_TRIAGE,
     icon: TrafficLightIcon,
     config: {
         protocols: [
             {
-                id: 'stoma-red',
+                id: 'chemo-red',
                 level: 'red',
-                description: '장루 괴사 및 허혈 의심',
-                symptoms: ['장루 색깔이 검거나 보라색으로 변함', '지속적인 출혈', '심한 복통'],
-                action: '즉시 병원 방문 요망'
+                description: '호중구 감소성 발열(응급)',
+                symptoms: ['체온 38.0℃ 이상 지속', '심한 오한', '의식 혼미'],
+                action: '즉시 응급실 이동 및 항암 치료력 고지'
             },
             {
-                id: 'stoma-yellow',
+                id: 'chemo-yellow',
                 level: 'yellow',
-                description: '피부 손상 및 자극',
-                symptoms: ['장루 주변 피부 발적', '따가움', '경미한 출혈'],
-                action: '장루 전문 간호사 상담 및 사진 전송 권고'
+                description: '탈수 및 소화기 부작용',
+                symptoms: ['하루 5회 이상 설사', '수분 섭취 불가능한 구토', '구내염 통증 심화'],
+                action: '코디네이터 통화 및 수액 요법 고려'
             }
         ],
         autoAlertGuardian: true,

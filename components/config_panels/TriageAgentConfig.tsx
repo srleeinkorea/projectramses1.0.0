@@ -27,6 +27,14 @@ const TriageAgentConfigPanel: React.FC<TriageAgentConfigPanelProps> = ({ agent, 
   const handleAutoAlertChange = (enabled: boolean) => {
     onConfigChange(agent.id, { ...config, autoAlertGuardian: enabled });
   };
+  
+  const handleVentilatorIntegrationChange = (enabled: boolean) => {
+    onConfigChange(agent.id, { ...config, ventilatorIntegration: enabled });
+  };
+
+  const handleCustomPromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onConfigChange(agent.id, { ...config, customPrompt: e.target.value });
+  };
 
   const handleProtocolUpdate = (protocolId: string, field: keyof TriageCriteria, value: any) => {
       const newProtocols = config.protocols.map(p => {
@@ -143,6 +151,30 @@ const TriageAgentConfigPanel: React.FC<TriageAgentConfigPanelProps> = ({ agent, 
                     </div>
                 </div>
             ))}
+        </div>
+      </Card>
+      
+      <Card title="고급 AI 설정 (Prompt Engineering)" description="트리아제 판단 로직에 적용할 추가적인 임상 컨텍스트나 프롬프트를 설정합니다.">
+        <div className="space-y-4 mt-4">
+            <div>
+                 <label className="block text-sm font-medium text-gray-700 mb-2">Custom Triage Prompt (System Instruction)</label>
+                 <textarea 
+                    className="w-full text-sm p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 font-mono bg-gray-50" 
+                    rows={4}
+                    placeholder="예: 소아 환자의 경우, 고열과 함께 호흡수가 분당 50회를 초과하면 즉시 Red Flag로 간주하십시오."
+                    value={config.customPrompt || ""}
+                    onChange={handleCustomPromptChange}
+                 />
+                 <p className="text-xs text-gray-500 mt-1">이 프롬프트는 AI가 증상을 분석할 때 최우선 규칙으로 적용됩니다.</p>
+            </div>
+            
+            <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                <div>
+                    <span className="block text-sm font-medium text-gray-900">인공호흡기 데이터 통합 (Ventilator Integration)</span>
+                    <span className="block text-xs text-gray-500">인공호흡기 알람(High Pressure, Low Tidal Vol)을 트리아제 판단의 핵심 척도로 사용합니다.</span>
+                </div>
+                <ToggleSwitch enabled={config.ventilatorIntegration || false} setEnabled={handleVentilatorIntegrationChange} />
+            </div>
         </div>
       </Card>
 

@@ -119,6 +119,8 @@ export interface TriageCriteria {
 export interface TriageConfig {
   protocols: TriageCriteria[];
   autoAlertGuardian: boolean;
+  customPrompt?: string;
+  ventilatorIntegration?: boolean;
   knowledgeSourceIds: string[];
   emrIntegration: EMRIntegrationConfig;
   notificationPreferences: NotificationPreferences;

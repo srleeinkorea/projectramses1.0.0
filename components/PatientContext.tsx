@@ -36,9 +36,7 @@ const PatientContext: React.FC<PatientContextProps> = ({ department, patient }) 
   if (!patient) return <div className="p-4 text-sm text-gray-500">환자를 선택해주세요.</div>;
 
   const isMale = patient.gender === '남';
-  const isSurgery = department === 'SURGERY';
-  const isColorectal = department === 'COLORECTAL';
-
+  
   const renderComplicationScore = (p: Patient) => {
     if ((p.department !== 'SURGERY' && p.department !== 'COLORECTAL')) return null;
     
@@ -51,24 +49,27 @@ const PatientContext: React.FC<PatientContextProps> = ({ department, patient }) 
     const icon = p.department === 'COLORECTAL' ? <ArrowPathIcon className="h-4 w-4" /> : <ExclamationTriangleIcon className="h-4 w-4" />;
 
     // Determine color based on risk level
-    let badgeClass = 'bg-green-100 text-green-800';
+    let badgeClass = 'bg-green-50 text-green-700 border-green-200';
     
     if (p.department === 'COLORECTAL') {
-         if (level === 'Moderate') badgeClass = 'bg-purple-100 text-purple-800';
-         else if (level === 'High' || level === 'Critical') badgeClass = 'bg-fuchsia-100 text-fuchsia-800';
-         else badgeClass = 'bg-indigo-50 text-indigo-800';
+         if (level === 'Moderate') badgeClass = 'bg-purple-50 text-purple-700 border-purple-200';
+         else if (level === 'High' || level === 'Critical') badgeClass = 'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200';
+         else badgeClass = 'bg-indigo-50 text-indigo-700 border-indigo-200';
     } else {
-         if (level === 'Moderate') badgeClass = 'bg-yellow-100 text-yellow-800';
-         else if (level === 'High' || level === 'Critical') badgeClass = 'bg-red-100 text-red-800';
+         if (level === 'Moderate') badgeClass = 'bg-yellow-50 text-yellow-700 border-yellow-200';
+         else if (level === 'High' || level === 'Critical') badgeClass = 'bg-red-50 text-red-700 border-red-200';
     }
 
     return (
-        <div className={`flex items-center px-3 py-1.5 rounded-full border border-opacity-10 ${badgeClass} border-current ml-auto md:ml-6`}>
-            {icon}
-            <span className="ml-2 text-xs font-bold mr-2">{title}</span>
-            <span className="text-lg font-extrabold">{score}</span>
-            <span className="mx-2 opacity-50 text-xs">|</span>
-            <span className="text-xs font-semibold">{label}</span>
+        <div className={`flex items-center px-4 py-1.5 rounded-xl border ${badgeClass} ml-auto md:ml-6 shadow-sm`}>
+            <span className="mr-2 opacity-80">{icon}</span>
+            <div className="flex flex-col items-end leading-tight">
+                <span className="text-[10px] uppercase font-bold tracking-wide opacity-70">{title}</span>
+                <div className="flex items-center gap-2">
+                    <span className="text-lg font-black">{score}</span>
+                    <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-white bg-opacity-50">{label}</span>
+                </div>
+            </div>
         </div>
     );
   };
@@ -83,8 +84,7 @@ const PatientContext: React.FC<PatientContextProps> = ({ department, patient }) 
             <div className="flex items-center gap-2">
                 <h2 className="text-xl font-bold text-gray-900 leading-none">{patient.name}</h2>
                 <span className="text-xs text-gray-500 font-medium whitespace-nowrap">({patient.gender}/{patient.age}세)</span>
-                {isSurgery && <span className="px-1.5 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded border border-indigo-100 whitespace-nowrap">G-PEP & REHAB</span>}
-                {isColorectal && <span className="px-1.5 py-0.5 bg-purple-50 text-purple-700 text-[10px] font-bold rounded border border-purple-100 whitespace-nowrap">C-PEP & REHAB</span>}
+                {/* Redundant department badges removed here to clean up UI */}
             </div>
             <div className="flex items-center gap-2 mt-1 min-w-0">
                 <span className="text-xs font-semibold text-gray-700 truncate max-w-[150px] sm:max-w-[240px]" title={patient.diagnosis}>{patient.diagnosis}</span>
